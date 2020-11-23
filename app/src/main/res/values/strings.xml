@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">MoveKos</string>
     <string name="title_activity_home">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home"></string>
+    <string name="title_dashboard"></string>
+    <string name="title_notifications"></string>
     <string name="title_activity_main2">MainActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_home_">MainActivity</string>
     <string name="title_activity_bottom">MainActivity</string>
+    <string name="google_maps_API_key">AIzaSyAQ7FVP_6AWZD1AEC8DX2YEv340-esE6Mo</string>
+
 </resources>
