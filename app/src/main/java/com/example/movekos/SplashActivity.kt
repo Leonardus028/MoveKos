@@ -19,22 +19,24 @@ class SplashActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         Handler().postDelayed({
-            val intent = Intent(this@SplashActivity, HomeActivity::class.java)
+            val intent = Intent(this@SplashActivity, AuthenticationActivity::class.java)
             startActivity(intent)
             finish()
         },  3000)
+
         setUpMap()
 
     }
-
     private fun setUpMap() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                SplashActivity.LOCATION_PERMISSION_REQUEST_CODE
-            )
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
+        
     }
+
+
+
 }
