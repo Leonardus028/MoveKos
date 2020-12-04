@@ -75,6 +75,8 @@ class OrderActivity() : FragmentActivity(), OnMapReadyCallback, LocationListener
         setUpMap()
 
     }
+
+
        private fun setUpMap() {
            // 1
            if (ActivityCompat.checkSelfPermission(

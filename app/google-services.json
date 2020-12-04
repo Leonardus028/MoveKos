@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "206976612701",
+    "firebase_url": "https://movekos.firebaseio.com",
+    "project_id": "movekos",
+    "storage_bucket": "movekos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206976612701:android:67770060610919d473d0b4",
+        "android_client_info": {
+          "package_name": "com.example.movekos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206976612701-b7op3ire5lh5qe5fbdqh7eqriu6pph8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ7FVP_6AWZD1AEC8DX2YEv340-esE6Mo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206976612701-b7op3ire5lh5qe5fbdqh7eqriu6pph8c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
