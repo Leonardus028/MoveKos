@@ -16,10 +16,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="ExtraText">
         <activity android:name=".ForgotPasswordActivity"></activity>
-        <activity android:name=".SecondFragment" />
-        <activity android:name=".FirstFragment" />
-        <activity android:name=".RegisterFragment" />
-        <activity android:name=".LoginFragment" />
+
         <activity android:name=".AuthenticationActivity" />
         <activity android:name=".OrderActivity" />
 

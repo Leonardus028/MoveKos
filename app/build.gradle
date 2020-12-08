@@ -66,9 +66,11 @@ dependencies {
     // Auto Complete Place & location
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
 
     // Maps Utils
-    compile 'com.google.maps.android:android-maps-utils:0.4+'
+//    implementation 'com.google.maps.android:android-maps-utils:2.03'
+    implementation 'com.google.maps.android:android-maps-utils:2.0.3'
     implementation 'com.android.support:design:30.0.2'
 
     //firebase
@@ -84,8 +86,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.5.1'
 
     implementation 'com.android.support:multidex:1.0.3'
+
     // Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    // google-services
+    implementation 'com.google.gms:google-services:4.3.4'
     
 }
