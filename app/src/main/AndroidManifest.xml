@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExtraText">
-        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".HowtoOrderActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".SecondFragment" />
         <activity android:name=".FirstFragment" />
         <activity android:name=".RegisterFragment" />
