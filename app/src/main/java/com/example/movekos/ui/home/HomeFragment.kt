@@ -6,6 +6,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.movekos.R
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.common.api.Status
@@ -26,29 +30,32 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.maps.android.PolyUtil
+import org.json.JSONObject
 
 class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
-  private lateinit var map: GoogleMap
-  private lateinit var rootView: View
-  private lateinit var fusedLocationClient: FusedLocationProviderClient
-  private lateinit var lastLocation: Location
-  private lateinit var locationCallback: LocationCallback
-  private lateinit var locationRequest: LocationRequest
-  private var locationUpdateState = false
+    private lateinit var map: GoogleMap
+    private lateinit var rootView: View
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var lastLocation: Location
+    private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: LocationRequest
+    private var locationUpdateState = false
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    rootView = inflater.inflate(R.layout.fragment_home, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        rootView = inflater.inflate(R.layout.fragment_home, container, false)
 
-    inisialisasiLokasi()
-    createLocationRequest()
+        inisialisasiLokasi()
+        createLocationRequest()
 
-    return rootView
-  }
+        return rootView
+    }
 
   @SuppressLint("MissingPermission")
   override fun onMapReady(googleMap: GoogleMap?) {
@@ -61,8 +68,6 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     map.setOnMarkerClickListener(this)
 
     setUpMap()
-    inisialisasiAutoComplete()
-
 
     map.isMyLocationEnabled = true
 
@@ -73,6 +78,7 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12f))
       }
     }
+    inisialisasiAutoComplete()
   }
 
   companion object{
@@ -133,11 +139,7 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     task.addOnFailureListener { e ->
       // 6
       if (e is ResolvableApiException) {
-        // Location settings are not satisfied, but this can be fixed
-        // by showing the user a dialog.
         try {
-          // Show the dialog by calling startResolutionForResult(),
-          // and check the result in onActivityResult().
           e.startResolutionForResult(activity,
             REQUEST_CHECK_SETTINGS)
         } catch (sendEx: IntentSender.SendIntentException) {
@@ -169,22 +171,26 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     }
   }
 
+    // TODO: 12/9/2020 INI FUNGSI BUAT SI AUTOCOMPLETE
   private fun inisialisasiAutoComplete(){
     if (!Places.isInitialized()) {
       Places.initialize(requireContext(), getString(R.string.google_maps_API_key))
     }
 
     val autocompleteFragment = childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
-    autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME))
+    autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG))
     autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+      @SuppressLint("MissingPermission")
       override fun onPlaceSelected(place: Place) {
-        // TODO: Get info about the selected place.
-        map.apply {
-          addMarker(MarkerOptions()
-            .position(place.latLng!!)
-            .title("TEST DOANG"))
-        }
-        Log.i("TEMPAT", "Place: ${place.name}, ${place.latLng}")
+
+          // TODO: EDIT EDIT
+          Log.i("TEMPAT", "Place: ${place.name}, ${place.latLng}")
+
+
+
+          val source = LatLng(lastLocation.latitude, lastLocation.longitude)
+
+          buatDirection(source, place.latLng!!)
       }
 
       override fun onError(status: Status) {
@@ -193,7 +199,8 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     })
   }
 
-  private fun inisialisasiLokasi(){
+    // TODO: 12/9/2020 INI LOKASI ORANGNYA
+    private fun inisialisasiLokasi(){
     val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync(this)
 
@@ -206,6 +213,37 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
         // TODO: last locationnya
       }
     }
+  }
+
+    // TODO: 12/9/2020 INI FUNGSI BUAT EDIT ROUTENYA YA
+  private fun buatDirection(origin: LatLng, destination: LatLng){
+      map.addMarker(MarkerOptions().position(origin).title("Origin"))
+      map.addMarker(MarkerOptions().position(destination).title("Destination"))
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 14.5f))
+      val path: MutableList<List<LatLng>> = ArrayList()
+      val ori = "${origin.latitude},${origin.longitude}"
+      val des = "${destination.latitude},${destination.longitude}"
+
+      val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=$ori&destination=$des&key=AIzaSyAQ7FVP_6AWZD1AEC8DX2YEv340-esE6Mo"
+
+      val directionsRequest = object : StringRequest(Method.GET, urlDirections, Response.Listener<String> {
+        response ->
+      val jsonResponse = JSONObject(response)
+      // Get routes
+      val routes = jsonResponse.getJSONArray("routes")
+      val legs = routes.getJSONObject(0).getJSONArray("legs")
+      val steps = legs.getJSONObject(0).getJSONArray("steps")
+      for (i in 0 until steps.length()) {
+          val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
+          path.add(PolyUtil.decode(points))
+      }
+      for (i in 0 until path.size) {
+          map.addPolyline(PolylineOptions().addAll(path[i]).color(Color.RED))
+      }
+      }, Response.ErrorListener {}){}
+
+      val requestQueue = Volley.newRequestQueue(context)
+      requestQueue.add(directionsRequest)
   }
 
 }
