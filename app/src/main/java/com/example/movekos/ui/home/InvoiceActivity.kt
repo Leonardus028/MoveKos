@@ -1,0 +1,97 @@
+package com.example.movekos.ui.home
+
+import android.app.AlertDialog
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.movekos.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.alert_dialog.view.*
+
+@Suppress("UNUSED_PARAMETER")
+class InvoiceActivity: AppCompatActivity() {
+
+    private lateinit var database: FirebaseDatabase
+    private lateinit var myRef: DatabaseReference
+    private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private var strBarang = ""
+    private var strOrigin = ""
+    private var strDest = ""
+    private var strDistance = ""
+    private var strDuration = ""
+    private var rekening = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setContentView(R.layout.invoice)
+
+        database = FirebaseDatabase.getInstance()
+        myRef = database.reference
+        inisialisasi()
+
+        super.onCreate(savedInstanceState)
+    }
+
+    fun orderClick(view: View) {
+        alertDialog()
+
+    }
+
+    private fun pushFirebase(origin: String, destination: String, distance: String, duration: String, rekening: String, barang: String){
+        val currentUser = mAuth.currentUser
+        val recordRef = myRef.child("Users").child(currentUser!!.uid).child("record").child(java.util.Calendar.getInstance().time.toString())
+        recordRef.child("origin").setValue(origin)
+        recordRef.child("destination").setValue(destination)
+        recordRef.child("distance").setValue(distance)
+        recordRef.child("duration").setValue(duration)
+        recordRef.child("rekening").setValue(rekening)
+        recordRef.child("barang").setValue(barang)
+    }
+
+    private fun alertDialog(){
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.alert_dialog, null)
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+            .setTitle("Masukan Rekening")
+        val mAlertDialog = mBuilder.show()
+
+        mDialogView.okay.setOnClickListener {
+            mAlertDialog.dismiss()
+            rekening = mDialogView.edittextnya.text.toString()
+
+            pushFirebase(strOrigin, strDest, strDistance, strDuration, rekening, strBarang)
+
+            Toast.makeText(this, "ORDER DITERIMA", Toast.LENGTH_SHORT).show()
+        }
+        mDialogView.cancel.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+    }
+
+    private fun inisialisasi(){
+        val tvBarang: TextView = findViewById(R.id.barang)
+        val tvJarak: TextView = findViewById(R.id.jarak)
+        val tvWaktu: TextView = findViewById(R.id.waktu)
+
+
+        val extras = intent.extras
+
+        strBarang = extras!!.getString("EXTRA_BARANG")!!
+        strOrigin = extras.getString("EXTRA_ORIGIN")!!
+        strDest = extras.getString("EXTRA_DESTINATION")!!
+        strDistance = extras.getString("EXTRA_DISTANCE")!!
+        strDuration = extras.getString("EXTRA_DURATION")!!
+
+        Log.d("EXTRANYA", "$strBarang, $strDistance, $strDuration, $strDest, $strOrigin")
+
+        tvBarang.text = strBarang
+        tvJarak.text = strDistance
+        tvWaktu.text = strDuration
+    }
+}

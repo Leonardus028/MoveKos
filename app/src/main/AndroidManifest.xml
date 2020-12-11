@@ -34,6 +34,7 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home" />
+        <activity android:name=".ui.home.InvoiceActivity"/>
     </application>
 
 </manifest>
