@@ -1,6 +1,7 @@
 package com.example.movekos.ui.home
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -68,6 +69,11 @@ class InvoiceActivity: AppCompatActivity() {
             pushFirebase(strOrigin, strDest, strDistance, strDuration, rekening, strBarang)
 
             Toast.makeText(this, "ORDER DITERIMA", Toast.LENGTH_SHORT).show()
+
+            val intentHistory = Intent(this, HistoryActivity::class.java)
+            this.startActivity(intentHistory)
+
+            finish()
         }
         mDialogView.cancel.setOnClickListener {
             mAlertDialog.dismiss()
