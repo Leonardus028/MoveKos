@@ -63,11 +63,12 @@ class HistoryActivity: AppCompatActivity() {
                         orderDetail.waktu = order.child("duration").value.toString()
                         orderDetail.origin = order.child("origin").value.toString()
                         orderDetail.rekening = order.child("rekening").value.toString()
+                        orderDetail.harga = order.child("harga").value.toString()
+                        orderDetail.noresi = order.child("noresi").value.toString()
+                        orderDetail.status = order.child("status").value.toString()
 
                         list.add(orderDetail)
                     }
-                    Log.d("fbTEST", list[1].barang)
-                    Log.d("xxx", list.size.toString())
                     adapter.notifyDataSetChanged()
                 }
             })

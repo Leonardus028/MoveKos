@@ -23,7 +23,8 @@ class HistoryInvoiceActivity: AppCompatActivity() {
     private fun showDetail(order: Order){
         barang.text = order.barang
         jarak.text = order.jarak
-        waktu.text = order.waktu
+        harga.text = order.harga
         norek.text = order.rekening
+        tvResi.text = order.noresi
     }
 }

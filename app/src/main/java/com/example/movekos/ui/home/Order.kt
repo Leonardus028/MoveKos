@@ -9,4 +9,7 @@ class Order: Serializable {
     var jarak = ""
     var waktu = ""
     var rekening = ""
+    var noresi = ""
+    var harga = ""
+    var status = ""
 }

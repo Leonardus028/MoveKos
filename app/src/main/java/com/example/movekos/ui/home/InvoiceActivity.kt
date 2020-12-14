@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.alert_dialog.view.*
+import kotlinx.android.synthetic.main.invoice.*
 
 @Suppress("UNUSED_PARAMETER")
 class InvoiceActivity: AppCompatActivity() {
@@ -28,6 +29,7 @@ class InvoiceActivity: AppCompatActivity() {
     private var strDistance = ""
     private var strDuration = ""
     private var rekening = ""
+    private var harga = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.invoice)
@@ -44,15 +46,25 @@ class InvoiceActivity: AppCompatActivity() {
 
     }
 
-    private fun pushFirebase(origin: String, destination: String, distance: String, duration: String, rekening: String, barang: String){
+    private fun pushFirebase(
+        origin: String,
+        destination: String,
+        distance: String,
+        harga: String,
+        rekening: String,
+        barang: String,
+        noresi: String,
+        status: String){
         val currentUser = mAuth.currentUser
         val recordRef = myRef.child("Users").child(currentUser!!.uid).child("record").child(java.util.Calendar.getInstance().time.toString())
         recordRef.child("origin").setValue(origin)
         recordRef.child("destination").setValue(destination)
         recordRef.child("distance").setValue(distance)
-        recordRef.child("duration").setValue(duration)
+        recordRef.child("harga").setValue(harga)
         recordRef.child("rekening").setValue(rekening)
         recordRef.child("barang").setValue(barang)
+        recordRef.child("noresi").setValue(noresi)
+        recordRef.child("status").setValue(status)
     }
 
     private fun alertDialog(){
@@ -66,12 +78,9 @@ class InvoiceActivity: AppCompatActivity() {
             mAlertDialog.dismiss()
             rekening = mDialogView.edittextnya.text.toString()
 
-            pushFirebase(strOrigin, strDest, strDistance, strDuration, rekening, strBarang)
+            pushFirebase(strOrigin, strDest, strDistance, strDuration, rekening, strBarang, "-", "Pending")
 
             Toast.makeText(this, "ORDER DITERIMA", Toast.LENGTH_SHORT).show()
-
-            val intentHistory = Intent(this, HistoryActivity::class.java)
-            this.startActivity(intentHistory)
 
             finish()
         }
@@ -83,8 +92,8 @@ class InvoiceActivity: AppCompatActivity() {
     private fun inisialisasi(){
         val tvBarang: TextView = findViewById(R.id.barang)
         val tvJarak: TextView = findViewById(R.id.jarak)
-        val tvWaktu: TextView = findViewById(R.id.waktu)
-
+        val tvHarga: TextView = findViewById(R.id.harga)
+        val tvResi: TextView = findViewById(R.id.tvResi)
 
         val extras = intent.extras
 
@@ -94,10 +103,14 @@ class InvoiceActivity: AppCompatActivity() {
         strDistance = extras.getString("EXTRA_DISTANCE")!!
         strDuration = extras.getString("EXTRA_DURATION")!!
 
+        harga = (strDistance.substringBefore(".").toInt() * 5000).toString()
+
         Log.d("EXTRANYA", "$strBarang, $strDistance, $strDuration, $strDest, $strOrigin")
 
         tvBarang.text = strBarang
         tvJarak.text = strDistance
-        tvWaktu.text = strDuration
+        tvHarga.text = harga
+        tvResi.text = "-"
+        status.text = "Pending"
     }
 }
