@@ -9,11 +9,11 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.movekos.AuthenticationActivity
 import com.example.movekos.R
 import com.example.movekos.User
+import com.example.movekos.ui.home.HistoryActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -27,6 +27,8 @@ class ProfileFragment : Fragment() {
     private lateinit var reference: DatabaseReference
     private lateinit var userID: String
     private lateinit var logout : Button
+    private lateinit var historyButton : Button
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,14 +45,22 @@ class ProfileFragment : Fragment() {
             startActivity(Intent(context, AuthenticationActivity::class.java))
             requireActivity().finish()
         }
+
+        historyButton = root.findViewById(R.id.button_history)
+        historyButton.setOnClickListener {
+            val intentHistory = Intent(context, HistoryActivity::class.java)
+            startActivity(intentHistory)
+//            requireActivity().finish()
+        }
+
         user = FirebaseAuth.getInstance().currentUser!!
         reference = FirebaseDatabase.getInstance().getReference("Users")
-        userID = user!!.uid
+        userID = user.uid
 
 
         val emailTextView: TextView = root.findViewById(R.id.emailAddress)
         val fullNameTextView: TextView = root.findViewById(R.id.fullName)
-        reference!!.child(userID!!).addListenerForSingleValueEvent(object : ValueEventListener {
+        reference.child(userID).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val userProfile = snapshot.getValue(
                     User::class.java

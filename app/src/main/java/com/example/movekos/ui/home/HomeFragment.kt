@@ -3,6 +3,7 @@ package com.example.movekos.ui.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -35,7 +36,11 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.maps.android.PolyUtil
+import kotlinx.android.synthetic.main.alert_dialog.view.*
 import org.json.JSONObject
 
 class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -48,8 +53,17 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
 
+    private lateinit var database: FirebaseDatabase
+    private lateinit var myRef: DatabaseReference
+    private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    private var barang = ""
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_home, container, false)
+
+        database = FirebaseDatabase.getInstance()
+        myRef = database.reference
 
         inisialisasiLokasi()
         createLocationRequest()
@@ -200,50 +214,116 @@ class HomeFragment: Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
   }
 
     // TODO: 12/9/2020 INI LOKASI ORANGNYA
-    private fun inisialisasiLokasi(){
-    val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-    mapFragment.getMapAsync(this)
+      private fun inisialisasiLokasi(){
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
-    fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity().applicationContext)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity().applicationContext)
 
-    locationCallback = object : LocationCallback() {
-      override fun onLocationResult(p0: LocationResult) {
-        super.onLocationResult(p0)
-        lastLocation = p0.lastLocation
-        // TODO: last locationnya
-      }
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(p0: LocationResult) {
+                super.onLocationResult(p0)
+                lastLocation = p0.lastLocation
+                // TODO: last locationnya
+            }
+        }
     }
-  }
 
     // TODO: 12/9/2020 INI FUNGSI BUAT EDIT ROUTENYA YA
-  private fun buatDirection(origin: LatLng, destination: LatLng){
-      map.addMarker(MarkerOptions().position(origin).title("Origin"))
-      map.addMarker(MarkerOptions().position(destination).title("Destination"))
-      map.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 14.5f))
-      val path: MutableList<List<LatLng>> = ArrayList()
-      val ori = "${origin.latitude},${origin.longitude}"
-      val des = "${destination.latitude},${destination.longitude}"
 
-      val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=$ori&destination=$des&key=AIzaSyAQ7FVP_6AWZD1AEC8DX2YEv340-esE6Mo"
 
-      val directionsRequest = object : StringRequest(Method.GET, urlDirections, Response.Listener<String> {
-        response ->
-      val jsonResponse = JSONObject(response)
-      // Get routes
-      val routes = jsonResponse.getJSONArray("routes")
-      val legs = routes.getJSONObject(0).getJSONArray("legs")
-      val steps = legs.getJSONObject(0).getJSONArray("steps")
-      for (i in 0 until steps.length()) {
-          val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
-          path.add(PolyUtil.decode(points))
-      }
-      for (i in 0 until path.size) {
-          map.addPolyline(PolylineOptions().addAll(path[i]).color(Color.RED))
-      }
-      }, Response.ErrorListener {}){}
+    private fun buatDirection(origin: LatLng, destination: LatLng){
+        map.clear()
+        map.addMarker(MarkerOptions().position(origin).title("Origin"))
+        map.addMarker(MarkerOptions().position(destination).title("Destination"))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, 14.5f))
+        val path: MutableList<List<LatLng>> = ArrayList()
+        val ori = "${origin.latitude},${origin.longitude}"
+        val des = "${destination.latitude},${destination.longitude}"
 
-      val requestQueue = Volley.newRequestQueue(context)
-      requestQueue.add(directionsRequest)
-  }
+        val urlDirections = "https://maps.googleapis.com/maps/api/directions/json?origin=$ori&destination=$des&key=AIzaSyAQ7FVP_6AWZD1AEC8DX2YEv340-esE6Mo"
+
+        val directionsRequest = object : StringRequest(Method.GET, urlDirections, Response.Listener<String> {
+              response ->
+            val jsonResponse = JSONObject(response)
+            // Get routes
+            val routes = jsonResponse.getJSONArray("routes")
+            val legs = routes.getJSONObject(0).getJSONArray("legs")
+            val steps = legs.getJSONObject(0).getJSONArray("steps")
+            val distance = legs.getJSONObject(0).getJSONObject("distance").getString("text")
+            val duration = legs.getJSONObject(0).getJSONObject("duration").getString("text")
+
+            Log.d("SANA", "$distance, $duration")
+
+            val mDialogView = LayoutInflater.from(context).inflate(R.layout.alert_dialog, null)
+            val mBuilder = AlertDialog.Builder(context)
+                .setView(mDialogView)
+                .setTitle("Masukan Barang")
+            val mAlertDialog = mBuilder.show()
+
+            mDialogView.okay.setOnClickListener {
+                mAlertDialog.dismiss()
+                barang = mDialogView.edittextnya.text.toString()
+                for (i in 0 until steps.length()) {
+                    val points = steps.getJSONObject(i).getJSONObject("polyline").getString("points")
+                    path.add(PolyUtil.decode(points))
+                }
+                for (i in 0 until path.size) {
+                    map.addPolyline(PolylineOptions().addAll(path[i]).color(Color.RED))
+                }
+
+                val moveIntent: Intent = Intent(activity, InvoiceActivity::class.java)
+                val extras: Bundle = Bundle()
+                extras.putString("EXTRA_BARANG", barang)
+                extras.putString("EXTRA_ORIGIN", ori)
+                extras.putString("EXTRA_DESTINATION", des)
+                extras.putString("EXTRA_DURATION", duration)
+                extras.putString("EXTRA_DISTANCE", distance)
+                moveIntent.putExtras(extras)
+
+//                moveIntent.apply {
+//                    putExtra(InvoiceActivity.EXTRA_BARANG, barang)
+//                    putExtra(InvoiceActivity.EXTRA_ORIGIN, ori)
+//                    putExtra(InvoiceActivity.EXTRA_DESTINATION, des)
+//                    putExtra(InvoiceActivity.EXTRA_DURATION, duration)
+//                    putExtra(InvoiceActivity.EXTRA_DISTANCE, distance)
+//                }
+                activity?.startActivity(moveIntent)
+            }
+            mDialogView.cancel.setOnClickListener {
+                mAlertDialog.dismiss()
+            }
+
+//            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+//            builder.setTitle("Konfirmasi")
+//            builder.setMessage("Durasi: $duration\nJarak: $distance")
+//            builder.setCancelable(false)
+//            builder.setPositiveButton("OK") { _, _ ->
+//                // TODO: 12/9/2020 KALO PENCET OK LAKUIN APA
+//
+//
+//
+////                pushFirebase(ori, des, distance, duration)
+//            }
+//            builder.setNegativeButton("Cancel") { dialog, _ ->
+//                dialog.cancel()
+//            }
+//            val alertDialog: AlertDialog = builder.create()
+//            alertDialog.show()
+
+        }, Response.ErrorListener {}){}
+
+        val requestQueue = Volley.newRequestQueue(context)
+        requestQueue.add(directionsRequest)
+    }
+
+//    private fun pushFirebase(origin: String, destination: String, distance: String, duration: String){
+//        val currentUser = mAuth.currentUser
+//        val recordRef = myRef.child("Users").child(currentUser!!.uid).child("record").child(java.util.Calendar.getInstance().time.toString())
+//        recordRef.child("origin").setValue(origin)
+//        recordRef.child("destination").setValue(destination)
+//        recordRef.child("distance").setValue(distance)
+//        recordRef.child("duration").setValue(duration)
+//    }
 
 }
