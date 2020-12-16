@@ -9,10 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.movekos.AuthenticationActivity
 import com.example.movekos.HowtoOrderActivity
 import com.example.movekos.R
-import com.google.firebase.auth.FirebaseAuth
 
 
 class NotificationsFragment : Fragment() {
@@ -43,13 +41,10 @@ class NotificationsFragment : Fragment() {
     }
 
     cardCommunity.setOnClickListener {
-      startActivity(Intent(context, HowtoOrderActivity::class.java))
     }
     cardAbout.setOnClickListener {
-      startActivity(Intent(context, HowtoOrderActivity::class.java))
     }
     cardCredit.setOnClickListener {
-      startActivity(Intent(context, HowtoOrderActivity::class.java))
     }
 
 

@@ -15,8 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExtraText">
-        <activity android:name=".ForgotPasswordActivity"></activity>
-
+        <activity android:name=".HowtoOrderActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".AuthenticationActivity" />
         <activity android:name=".OrderActivity" />
 
@@ -34,9 +34,9 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home" />
-        <activity android:name=".ui.home.InvoiceActivity"/>
-        <activity android:name=".ui.home.HistoryActivity"/>
-        <activity android:name=".ui.home.HistoryInvoiceActivity"/>
+        <activity android:name=".ui.home.InvoiceActivity" />
+        <activity android:name=".ui.home.HistoryActivity" />
+        <activity android:name=".ui.home.HistoryInvoiceActivity" />
     </application>
 
 </manifest>

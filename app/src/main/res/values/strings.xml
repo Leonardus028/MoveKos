@@ -28,5 +28,14 @@
     <string name="logout">Logout</string>
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title1">Input Data</string>
+    <string name="title2">Complete Payment</string>
+    <string name="title3">Keep Calm and Wait</string>
+    <string name="description1">Input all the information needed for us to process your order</string>
+    <string name="description2">After we confirm your payment, your order will be procesed immediately</string>
+    <string name="description3">Wait your order to come. You can also cek the progress using the given resi number</string>
+    <string name="Next">Next</string>
+    <string name="Back">Back</string>
+    <string name="Done"><Done>Done</Done></string>
 
 </resources>
