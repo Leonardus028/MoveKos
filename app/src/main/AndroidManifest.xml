@@ -15,7 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="ExtraText">
-        <activity android:name=".HowtoOrderActivity"></activity>
+        <activity android:name=".JoinUsActivity"></activity>
+        <activity android:name=".AboutActivity" />
+        <activity android:name=".CreditNumberActivity" />
+        <activity android:name=".HowtoOrderActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".AuthenticationActivity" />
         <activity android:name=".OrderActivity" />

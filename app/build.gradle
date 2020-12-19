@@ -93,4 +93,6 @@ dependencies {
 
     // google-services
     implementation 'com.google.gms:google-services:4.3.4'
+
+    implementation 'com.github.medyo:android-about-page:1.1.1'
 }

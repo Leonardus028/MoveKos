@@ -1,5 +1,6 @@
 package com.example.movekos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
+import com.example.movekos.ui.notifications.NotificationsFragment;
 
 public class ThirdOrderFragment extends Fragment {
 
@@ -36,6 +39,7 @@ public class ThirdOrderFragment extends Fragment {
         });
 
         back = view.findViewById(R.id.slideThreeBack);
+        done = view.findViewById(R.id.slideThreeDone);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

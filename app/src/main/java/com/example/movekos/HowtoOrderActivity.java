@@ -18,5 +18,7 @@ public class HowtoOrderActivity extends AppCompatActivity {
 
         IntroAdapter adapter = new IntroAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
+
+
     }
 }
