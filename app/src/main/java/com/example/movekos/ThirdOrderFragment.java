@@ -33,7 +33,7 @@ public class ThirdOrderFragment extends Fragment {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                Toast.makeText(getActivity(), "Done", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getContext(), HomeActivity.class));
 
             }
         });

@@ -16,7 +16,7 @@
         android:layout_height="250dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
-        android:src="@drawable/slide_one_img" />
+        android:src="@drawable/firstorderimage" />
 
     <TextView
         android:id="@+id/textView"
@@ -25,7 +25,8 @@
         android:gravity="center"
         android:text="@string/title1"
         android:layout_marginTop="40dp"
-        android:textSize="26sp"
+        android:textSize="42sp"
+        android:fontFamily="@font/indigo_daisy"
         android:textColor="@color/colorAccent" />
 
     <TextView
@@ -34,6 +35,8 @@
         android:layout_height="wrap_content"
         android:text="@string/description1"
         android:gravity="center"
+        android:textColor="#ffffff"
+        android:fontFamily="@font/roboto_regular"
         android:textSize="18sp" />
 
     <LinearLayout
