@@ -78,7 +78,7 @@ class InvoiceActivity: AppCompatActivity() {
             mAlertDialog.dismiss()
             rekening = mDialogView.edittextnya.text.toString()
 
-            pushFirebase(strOrigin, strDest, strDistance, strDuration, rekening, strBarang, "-", "Pending")
+            pushFirebase(strOrigin, strDest, strDistance, harga , rekening, strBarang, "-", "Pending")
 
             Toast.makeText(this, "ORDER DITERIMA", Toast.LENGTH_SHORT).show()
 
@@ -103,13 +103,13 @@ class InvoiceActivity: AppCompatActivity() {
         strDistance = extras.getString("EXTRA_DISTANCE")!!
         strDuration = extras.getString("EXTRA_DURATION")!!
 
-        harga = (strDistance.substringBefore(".").toInt() * 5000).toString()
+        //harga = (strDistance.substringBefore(".").toInt() * 5000).toString()
 
         Log.d("EXTRANYA", "$strBarang, $strDistance, $strDuration, $strDest, $strOrigin")
 
         tvBarang.text = strBarang
         tvJarak.text = strDistance
-        tvHarga.text = harga
+        tvHarga.text = "-"
         tvResi.text = "-"
         status.text = "Pending"
     }
