@@ -21,7 +21,10 @@
         <activity android:name=".HowtoOrderActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".AuthenticationActivity" />
-        <activity android:name=".OrderActivity" />
+        <activity android:name=".IntroActivity" />
+        <activity android:name=".ui.home.InvoiceActivity" />
+        <activity android:name=".ui.home.HistoryActivity" />
+        <activity android:name=".ui.home.HistoryInvoiceActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -37,9 +40,7 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home" />
-        <activity android:name=".ui.home.InvoiceActivity" />
-        <activity android:name=".ui.home.HistoryActivity" />
-        <activity android:name=".ui.home.HistoryInvoiceActivity" />
+
     </application>
 
 </manifest>
