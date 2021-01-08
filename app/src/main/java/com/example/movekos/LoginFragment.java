@@ -21,6 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class LoginFragment extends Fragment implements View.OnClickListener{
 
@@ -28,7 +30,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     private TextView forgotPassword;
     private Button mLogin;
     private ProgressBar progressBar;
-
     private FirebaseAuth mAuth;
 
     @Override
